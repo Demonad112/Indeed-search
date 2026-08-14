@@ -1,0 +1,21 @@
+{
+  "source": "indeed",
+  "harvester": "Indeed MCP search_jobs + get_job_details",
+  "query": "digital forensics",
+  "location": "Calgary, AB",
+  "country_code": "CA",
+  "harvested_at": "2026-08-14T19:55:00+00:00",
+  "jobs": [
+    {
+      "job_id": "JOBSEARCH_63",
+      "title": "Canada Research Chair (Tier I) in Applied Cybersecurity and Privacy",
+      "company": "University of Calgary",
+      "location": "Calgary, AB",
+      "posted_on": "March 04, 2026",
+      "job_type": "Full-time",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aawjrps6w7lx",
+      "description": null
+    }
+  ]
+}

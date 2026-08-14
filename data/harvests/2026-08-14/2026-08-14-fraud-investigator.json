@@ -1,0 +1,9 @@
+{
+  "source": "indeed",
+  "harvester": "Indeed MCP search_jobs + get_job_details",
+  "query": "fraud investigator",
+  "location": "Calgary, AB",
+  "country_code": "CA",
+  "harvested_at": "2026-08-14T19:55:00+00:00",
+  "jobs": []
+}

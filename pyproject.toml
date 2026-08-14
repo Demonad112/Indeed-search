@@ -1,0 +1,31 @@
+[project]
+name = "jobpipe"
+version = "0.1.0"
+description = "Semi-autonomous investigator / loss-prevention job discovery and application pipeline for Calgary, AB"
+requires-python = ">=3.11"
+dependencies = [
+    "httpx>=0.27",
+    "feedparser>=6.0",
+    "PyYAML>=6.0",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+# Phase 2 (score.py) — added when we get there.
+score = ["anthropic>=0.40"]
+# Phase 4 (review.py).
+web = ["fastapi>=0.115", "uvicorn[standard]>=0.32", "jinja2>=3.1"]
+# Phase 5 (submit.py).
+submit = ["playwright>=1.48"]
+dev = ["pytest>=8.0"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["jobpipe"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

@@ -1,0 +1,120 @@
+{
+  "source": "indeed",
+  "harvester": "Indeed MCP search_jobs + get_job_details",
+  "query": "asset protection",
+  "location": "Calgary, AB",
+  "country_code": "CA",
+  "harvested_at": "2026-08-14T19:55:00+00:00",
+  "jobs": [
+    {
+      "job_id": "JOBSEARCH_50",
+      "title": "(CAN) Distribution Centre Team Associate - Asset Protection (Part Time, 3 Month Contract)",
+      "company": "Walmart",
+      "location": "Rocky View, AB",
+      "posted_on": "May 29, 2026",
+      "job_type": "Part-time",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aamtdbpnjmhb",
+      "description": null
+    },
+    {
+      "job_id": "JOBSEARCH_51",
+      "title": "Asset protection associate",
+      "company": "Walmart",
+      "location": "Okotoks, AB",
+      "posted_on": "May 15, 2026",
+      "job_type": "Full-time",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aazxkbw6qr76",
+      "description": null
+    },
+    {
+      "job_id": "JOBSEARCH_52",
+      "title": "Regulatory analyst - developmental",
+      "company": "Alberta Utilities Commission",
+      "location": "Calgary, AB",
+      "posted_on": "July 28, 2026",
+      "job_type": "Permanent",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aat2vrrcmxm8",
+      "description": null
+    },
+    {
+      "job_id": "JOBSEARCH_53",
+      "title": "Regulatory analyst - intermediate",
+      "company": "Alberta Utilities Commission",
+      "location": "Calgary, AB",
+      "posted_on": "July 28, 2026",
+      "job_type": "Permanent",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aa68gmmccppm",
+      "description": "*What we do*\n\nThe Alberta Utilities Commission is an independent, quasi-judicial agency of the province of Alberta. The AUC is responsible for ensuring that the delivery of Alberta's utility service takes place in a manner that is fair, responsible and in the public interest.\n\n*The ideal candidate*\n\nThis position primarily assists the Commission in processing rate-related applications in order to ensure that the delivery of utility service takes place in a manner that is fair, responsible and in the public interest. This involves providing information and analysis to assist the Commission members in the decision-making process.\n\nTo be successful in this role, you should have a background in engineering, exceptional communication skills and possess the ability to translate complex technical issues into clear, understandable information for diverse audiences.\n\n*Key responsibilities*\n- Contribute to the review and analysis of utility applications, including business cases, financial schedules, and technical documentation, and provide analysis and written briefings to Commission members.\n- Assist in identifying issues requiring further clarification or follow-up and prepare draft information requests to applicants and intervening parties.\n- Provide research and advice on various energy-related issues and issues related to applications and regulatory practices.\n- Manage the processing of utility rate applications (proceedings) and lead proceeding teams as a lead application officer.\n- Work closely with legal counsel on developing hearing questions and preparing for hearings.\n\n*Qualifications*\n- Undergraduate degree in engineering (preferred), economics, business, or a related field.\n- A minimum of four years of relevant regulatory or utility industry experience.\n- A professional designation (e.g. P. Eng. P.L. (Eng.), CPA, CFA) and/or a graduate degree are considered an asset.\n- Knowledge of and experience with cost-of-service regulation, performance-based regulation and associated principles.\n- Technical writing ability that conveys intended messages to target audiences with clarity and precision.\n\n*How to apply*\n\nPlease submit your resume and cover letter to opportunities@auc.ab.ca and include position number 26-008 and your name in the subject line. Applications will be accepted until Friday, August 14, 2026.\n\nPay: $1.00-$2.00 per year\n\nBenefits:\n- Company pension\n- Employee assistance program\n- Paid time off\n- Work from home\n\nWork Location: In person"
+    },
+    {
+      "job_id": "JOBSEARCH_54",
+      "title": "Wealth Management Portfolio Manager",
+      "company": "Palisade Capital Management",
+      "location": "Calgary, AB",
+      "posted_on": "July 14, 2026",
+      "job_type": "Full-time",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aawwjbdqrrys",
+      "description": null
+    },
+    {
+      "job_id": "JOBSEARCH_55",
+      "title": "Licensed Condominium Manager",
+      "company": "Confidential",
+      "location": "Calgary, AB",
+      "posted_on": "June 17, 2026",
+      "job_type": "Permanent",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aajqbm9qwbh8",
+      "description": null
+    },
+    {
+      "job_id": "JOBSEARCH_56",
+      "title": "Business Development Specialist (AB)",
+      "company": "HR Options, Inc.",
+      "location": "Alberta",
+      "posted_on": "May 20, 2026",
+      "job_type": "Full-time",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aa74t9bxvmpj",
+      "description": null
+    },
+    {
+      "job_id": "JOBSEARCH_57",
+      "title": "Subprime Finance Manager",
+      "company": "McManes Automotive Group",
+      "location": "Calgary, AB",
+      "posted_on": "August 07, 2026",
+      "job_type": "Full-time",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aa72g7x8qrlr",
+      "description": null
+    },
+    {
+      "job_id": "JOBSEARCH_58",
+      "title": "Finance Manager (F&I Automotive)",
+      "company": "Confidential",
+      "location": "Calgary, AB",
+      "posted_on": "July 24, 2026",
+      "job_type": "Permanent",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aawjwmfrgmsq",
+      "description": null
+    },
+    {
+      "job_id": "JOBSEARCH_59",
+      "title": "Loan Consultant",
+      "company": "Fairstone",
+      "location": "Calgary, AB",
+      "posted_on": "August 13, 2026",
+      "job_type": "Full-time",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aahhmlv2t8gm",
+      "description": null
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "source": "indeed",
+  "harvester": "Indeed MCP search_jobs + get_job_details",
+  "query": "regulatory investigator",
+  "location": "Calgary, AB",
+  "country_code": "CA",
+  "harvested_at": "2026-08-14T19:55:00+00:00",
+  "jobs": [
+    {
+      "job_id": "JOBSEARCH_64",
+      "title": "Investigator",
+      "company": "Alberta Motor Vehicle Industry Council (AMVIC)",
+      "location": "Calgary, AB",
+      "posted_on": "July 27, 2026",
+      "job_type": "Permanent",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aakgtngqmcfz",
+      "description": null
+    },
+    {
+      "job_id": "JOBSEARCH_65",
+      "title": "Lab Technician, Arnie Charbonneau Cancer Institute",
+      "company": "University of Calgary",
+      "location": "Calgary, AB",
+      "posted_on": "August 14, 2026",
+      "job_type": "Full-time",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aasg4phdszk2",
+      "description": null
+    },
+    {
+      "job_id": "JOBSEARCH_66",
+      "title": "Senior Workplace Investigator - Conduct and WHD",
+      "company": "Metrolinx",
+      "location": "Canada",
+      "posted_on": "August 05, 2026",
+      "job_type": "Full-time",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aamjx69x7hm7",
+      "description": null
+    },
+    {
+      "job_id": "JOBSEARCH_67",
+      "title": "Associate Director, Clinical Operations (Study Startup)",
+      "company": "Everest Clinical Research",
+      "location": "Canada",
+      "posted_on": "May 14, 2026",
+      "job_type": "Permanent",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aanw68zsdvwj",
+      "description": null
+    }
+  ]
+}

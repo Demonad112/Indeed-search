@@ -1,0 +1,23 @@
+.env
+*.db
+*.db-wal
+*.db-shm
+data/jobpipe.db
+
+# The inbox is a working directory — harvest files land here, discover.py
+# consumes them and archives them. The committed reference snapshots live in
+# data/harvests/.
+data/inbox/indeed/*.json
+data/inbox/**/processed/
+
+artifacts/
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.uv/
+uv.lock
+logs/
+*.log
+.DS_Store

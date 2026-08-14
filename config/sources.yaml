@@ -1,0 +1,101 @@
+# Where postings come from.
+
+# Coarse geographic prefilter applied at ingest. ATS boards list roles
+# worldwide; without this a single large board floods the database. This is
+# deliberately generous — real must_have evaluation happens in Phase 2.
+location_filter:
+  allow:
+    - calgary
+    - airdrie
+    - okotoks
+    - chestermere
+    - cochrane
+    - strathmore
+    - rocky view
+    - alberta
+    - ", ab"
+    - remote
+    - canada          # national postings often turn out to be Calgary-eligible
+  deny:
+    - edmonton        # Alberta, but not commutable
+    - fort mcmurray
+    - grande prairie
+    - lethbridge
+    - medicine hat
+    - red deer
+
+# ---------------------------------------------------------------------------
+# Indeed
+# ---------------------------------------------------------------------------
+# The RSS feed named in the original spec (ca.indeed.com/rss) is retired — it
+# answers HTTP 403 with a bot-challenge page. Scraping the HTML site is ruled
+# out by constraint #2. Postings instead arrive as JSON harvested through
+# Indeed's official MCP search tool inside the Claude session, dropped into
+# inbox_dir. See docs/indeed_harvest.md.
+indeed:
+  enabled: true
+  inbox_dir: data/inbox/indeed
+  archive: true       # move consumed harvest files to inbox_dir/processed/
+
+  # The queries the harvest should cover. Read by the harvest doc, not by code.
+  queries:
+    - investigator
+    - surveillance investigator
+    - fraud investigator
+    - loss prevention
+    - asset protection
+    - security analyst
+    - digital forensics
+    - regulatory investigator
+
+# ---------------------------------------------------------------------------
+# Public ATS boards
+# ---------------------------------------------------------------------------
+# Adapters are built and tested. Add slugs and flip `enabled` when you have
+# employers worth watching. Check a slug first with:
+#     python run.py probe --greenhouse <slug>
+#
+# The slug is the last path segment of the employer's public board URL:
+#     boards.greenhouse.io/SLUG        api: boards-api.greenhouse.io/v1/boards/SLUG/jobs
+#     jobs.lever.co/SLUG               api: api.lever.co/v0/postings/SLUG
+#     jobs.ashbyhq.com/SLUG            api: jobs.ashbyhq.com/api/non-user-graphql
+
+greenhouse:
+  enabled: false
+  companies: []
+  # - slug: examplecorp
+  #   name: Example Corp
+
+lever:
+  enabled: false
+  companies: []
+
+ashby:
+  enabled: false
+  companies: []
+
+# ---------------------------------------------------------------------------
+# Government portals — BLOCKED, awaiting your call
+# ---------------------------------------------------------------------------
+# Checked on 2026-08-14 as the spec asked:
+#
+#   Government of Alberta — jobpostings.alberta.ca
+#     SAP SuccessFactors. Returns HTML only; no JSON or RSS endpoint found.
+#
+#   City of Calgary — calgary.ca/careers
+#     HTML landing page; the underlying ATS host was not reachable from here.
+#
+# Both would need an HTML parser, which the spec says to raise with you first.
+# Not writing one until you say so. In the meantime both employers' Calgary
+# postings do surface through the Indeed harvest — the Government of Alberta
+# "Vehicle Safety Investigator" and the City of Calgary "Calgary Police Service
+# Digital Evidence Technician" both came through that way.
+government:
+  alberta:
+    enabled: false
+    status: no_json_or_rss_endpoint
+    url: https://jobpostings.alberta.ca
+  calgary:
+    enabled: false
+    status: html_only_ats_unreachable
+    url: https://www.calgary.ca/careers.html

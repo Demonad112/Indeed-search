@@ -1,0 +1,43 @@
+{
+  "source": "indeed",
+  "harvester": "Indeed MCP search_jobs + get_job_details",
+  "query": "security analyst",
+  "location": "Calgary, AB",
+  "country_code": "CA",
+  "harvested_at": "2026-08-14T19:55:00+00:00",
+  "jobs": [
+    {
+      "job_id": "JOBSEARCH_60",
+      "title": "Regulatory analyst - intermediate",
+      "company": "Alberta Utilities Commission",
+      "location": "Calgary, AB",
+      "posted_on": "July 28, 2026",
+      "job_type": "Permanent",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aazpj88zrztx",
+      "description": null
+    },
+    {
+      "job_id": "JOBSEARCH_61",
+      "title": "Privacy Program Specialist / Analyst (Data & AI Readiness)",
+      "company": "Raise",
+      "location": "Calgary, AB",
+      "posted_on": "August 12, 2026",
+      "job_type": "Contract",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aadkfqbvcr47",
+      "description": null
+    },
+    {
+      "job_id": "JOBSEARCH_62",
+      "title": "L3 SOC Analyst - Calgary",
+      "company": "Integrity360",
+      "location": "Calgary, AB",
+      "posted_on": "August 14, 2026",
+      "job_type": "Permanent",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aa6hgxmbm6t4",
+      "description": "Title: Level 3 SOC Analyst\n\nLocation: Calgary, 5 days a week onsite\nWork Hours: 9.00-17.30\nJob type: Full-Time Permanent\nSalary: Negotiable / DOE\n\nAbout Us\n\nIntegrity360 is a leading independent cybersecurity and PCI specialist operating across Europe, Africa, the Caribbean, and North America.\n\nJob Role / Responsibilities\n\nIn this role, you will act as a Level 3 escalation point within the MDR/SOC function, providing advanced technical support to Level 2 analysts during complex or high-severity investigations. You will be expected to bring deep operational knowledge across modern security technologies, including SIEM, EDR, Network Intrusion Detection Systems, SOAR, DLP and related security monitoring platforms.\n\nPrimary Duties/Responsibilities include:\nAct as the Level 3 escalation point for advanced, complex or high-impact security investigations.\nPerform in-depth analysis of security events, alerts, logs, endpoint telemetry, network traffic and other relevant data sources.\nLead advanced incident investigations, including scoping, containment, eradication and remediation recommendations.\nAnalyse malicious activity, suspicious files, attacker behaviour and adversary TTPs.\nReview and improve SIEM, EDR, NIDS, SOAR and other security tool configurations to reduce false positives and improve detection quality.\nConduct threat hunting and proactive analysis based on indicators, behaviours, intelligence and attack patterns.\nDocument investigation findings, evidence, timelines, containment actions and remediation recommendations in a clear and structured manner.\n\nDesired Skills\nStrong hands-on experience in Security Operations Centre or MDR environments.\nDeep operational knowledge of SIEM, EDR, Network Intrusion Detection Systems, SOAR, DLP and related security monitoring technologies.\nExperience with SIEM query languages and detection logic, such as KQL, SPL, Sigma or equivalent.\nStrong understanding of attacker tactics, techniques and procedures, including MITRE ATT&CK.\nStrong understanding of enterprise network architecture, TCP/IP, firewalls, proxies, VPNs, DNS, email security and cloud environments.\n\nCertifications/Qualifications\nSecurity industry certifications such as GCIH, GCFA, GCIA, GNFA, GCTI, GSEC, CISSP, CySA+, SC-200, AZ-500 or equivalent are highly beneficial.\nMinimum 5 years of experience in cyber security, including experience in SOC, MDR, incident response, CSIRT or cyber security operations environments."
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "source": "indeed",
+  "harvester": "Indeed MCP search_jobs + get_job_details",
+  "query": "loss prevention",
+  "location": "Calgary, AB",
+  "country_code": "CA",
+  "harvested_at": "2026-08-14T19:55:00+00:00",
+  "jobs": [
+    {
+      "job_id": "JOBSEARCH_40",
+      "title": "Security Guard - Calgary Only",
+      "company": "365 Patrol Ltd",
+      "location": "Calgary, AB",
+      "posted_on": "August 06, 2026",
+      "job_type": "Full-time",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aas96mbfhntk",
+      "description": "Apply before reading the following request:\n\n1. A personal vehicle is sometimes required for certain jobs\n2. The work location will be consistently on the in various parts of Calgary and it surrounding areas. Please do not apply if the distance is a concern to you;\n3. Available to start a shift after a successful in-person interview.\n\nOverview\nWe are seeking a dedicated and vigilant Security Guard to join our team. The ideal candidate will play a crucial role in maintaining a safe and secure environment for our clients, employees, and visitors. This position requires a proactive individual who is skilled in surveillance techniques and has a strong background in loss prevention and law enforcement.\n\nResponsibilities\nMonitor and patrol assigned areas to ensure the safety and security of the premises.\nUtilize surveillance equipment, including CCTV systems, to observe activities and detect suspicious behavior.\nRespond promptly to alarms and incidents, conducting investigations as necessary.\nEnforce rules and regulations to maintain order within the facility.\nDocument incidents, prepare reports, and communicate effectively with law enforcement when required.\nProvide assistance to visitors and employees while ensuring compliance with security protocols.\n\nExperience\nPrevious experience in security, law enforcement, or a related field is preferred.\nFamiliarity with surveillance systems and loss prevention strategies is highly desirable.\nStrong observational skills with the ability to remain calm under pressure.\n\nJob Types: Full-time, Part-time, Permanent, Casual\n\nPay: $16.00 per hour\n\nBenefits:\nFlexible schedule\nOn-site parking\n\nLicence/Certification:\nSecurity Guard Licence (required or in process)\n\nWork Location: In person"
+    },
+    {
+      "job_id": "JOBSEARCH_41",
+      "title": "Experienced Retail Store Manager - Northern Canada",
+      "company": "Northern / NorthMart",
+      "location": "Alberta",
+      "posted_on": "April 14, 2023",
+      "job_type": "Full-time",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aalbvxj9wttr",
+      "description": null
+    },
+    {
+      "job_id": "JOBSEARCH_42",
+      "title": "Diamond & Jewelry Consultant",
+      "company": "Alberta Diamond Exchange",
+      "location": "Calgary, AB",
+      "posted_on": "July 15, 2026",
+      "job_type": "Full-time",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aahjkkcbcgbv",
+      "description": null
+    },
+    {
+      "job_id": "JOBSEARCH_43",
+      "title": "Assistant Manager - ReStore (Temporary Coverage)",
+      "company": "Habitat for Humanity Southern Alberta",
+      "location": "Calgary, AB",
+      "posted_on": "July 07, 2026",
+      "job_type": "Temporary",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aaqgy9jwh9t8",
+      "description": null
+    },
+    {
+      "job_id": "JOBSEARCH_44",
+      "title": "Overnight Freight Associate: Part Time - OKOTOKS",
+      "company": "Home Depot Canada",
+      "location": "Okotoks, AB",
+      "posted_on": "July 24, 2026",
+      "job_type": "Part-time",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aamzv6gn4btg",
+      "description": null
+    },
+    {
+      "job_id": "JOBSEARCH_45",
+      "title": "Assistant Manager/Manager-In-Training - Ben Moss Jewellers (Chinook Centre)",
+      "company": "Charm Diamond Centres",
+      "location": "Calgary, AB",
+      "posted_on": "August 05, 2026",
+      "job_type": "Full-time",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aan8jcdw6gbc",
+      "description": null
+    },
+    {
+      "job_id": "JOBSEARCH_46",
+      "title": "Plumbing & Electrical Sales Associate: Part Time - OKOTOKS",
+      "company": "Home Depot Canada",
+      "location": "Okotoks, AB",
+      "posted_on": "August 11, 2026",
+      "job_type": "Part-time",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aakrx6rzxggj",
+      "description": null
+    },
+    {
+      "job_id": "JOBSEARCH_47",
+      "title": "Security Guard - (Full-Time)",
+      "company": "Kandor Management",
+      "location": "Calgary, AB",
+      "posted_on": "June 15, 2026",
+      "job_type": "Casual",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aaf7rkvsplvj",
+      "description": null
+    },
+    {
+      "job_id": "JOBSEARCH_48",
+      "title": "Security Guard (Full-Time)",
+      "company": "Guardteck Security",
+      "location": "Calgary, AB",
+      "posted_on": "June 15, 2026",
+      "job_type": "Casual",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aapx4bj88j4f",
+      "description": null
+    },
+    {
+      "job_id": "JOBSEARCH_49",
+      "title": "Asset protection associate",
+      "company": "Walmart",
+      "location": "Okotoks, AB",
+      "posted_on": "May 15, 2026",
+      "job_type": "Full-time",
+      "compensation": "N/A",
+      "url": "https://to.indeed.com/aacdm7lscqxn",
+      "description": null
+    }
+  ]
+}

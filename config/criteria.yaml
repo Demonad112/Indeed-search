@@ -1,0 +1,118 @@
+# Targeting rules.
+#
+# Phase 1 (discover.py) reads only three things from this file:
+#   - must_have.salary_floor   (to flag BELOW-FLOOR postings in the run summary)
+#   - must_have.hours_per_week (the basis for turning hourly pay into annual)
+#   - exclude.titles           (hard title rejects, dropped at ingest)
+# Everything else is here ready for Phase 2 (score.py).
+
+must_have:
+  location:
+    - Calgary
+    - Airdrie
+    - Okotoks
+    - Chestermere
+    - Cochrane
+    - remote-AB
+
+  employment_type:
+    - full-time
+    - permanent
+
+  # Your stated minimum: $20/hour.
+  #
+  # Annualised at hours_per_week x 52 for comparison against salaried postings:
+  # $20/hr -> $41,600/yr. Note this is a low bar for the roles being targeted —
+  # all three calibration postings clear it comfortably, and the only Calgary
+  # postings it actually excludes so far are guard roles at $16/hr. It works as
+  # a floor, not as a filter that does much work. Raise it when you want it to.
+  salary_floor:
+    amount: 20
+    period: hourly
+
+  # Used to annualise hourly rates. 40 is the conventional basis; note that some
+  # postings state otherwise (Calgary Police Service is a 35-hour week, Government
+  # of Alberta 36.25), so an hourly role's real annual figure may be a little
+  # under what this produces.
+  hours_per_week: 40
+
+exclude:
+  # Matched whole-word against the job title at ingest. Anything here never
+  # reaches the database.
+  titles:
+    - security guard
+    - cashier
+    - freight associate
+    - retail associate
+    - sales associate
+    - store manager
+    - assistant manager
+    - crossing guard
+
+  # Phase 2 uses these against the body text.
+  keywords:
+    - door supervisor
+    - unarmed guard
+    - mall patrol
+    - concierge security
+
+strong_signals:
+  - investigative case management
+  - digital forensics / evidence handling
+  - fraud / financial crime
+  - network or DNS analysis
+  - regulatory or statutory enforcement
+  - report writing for court or tribunal
+  - interviewing and formal statement taking
+  - CCTV / surveillance evidence handling
+  - working alongside police or Crown
+
+background:
+  # Your actual experience, for relevance matching. Kept factual — Phase 3 is
+  # forbidden from inventing anything beyond this.
+  - loss prevention and physical security (London Drugs, Save-On-Foods)
+  - detention and arrest, evidence handling, report writing for police and courts
+  - internal investigations against staff
+  - CCTV monitoring, recording and disclosure to police and court systems
+  - security team leadership (30 personnel, Calgary Stampede)
+  - IT support: Active Directory, Office 365, Windows Server 2008-2019
+  - network fundamentals: DNS, DHCP, VPN, firewalls, subnetting
+  - network forensics, DNS analysis, log interpretation
+  - iOS/macOS diagnostic investigation
+  - Python tooling and automation
+  - virtualisation (Hyper-V, VMware), backups (Veeam, Datto)
+
+certifications_held:
+  # Phase 3 must never claim anything outside this list.
+  - name: Emergency Medical Responder (EMR)
+    issuer: Justice Institute of British Columbia
+    obtained: 2021-11
+  - name: Basic Life Support (BLS)
+    issuer: Canadian Red Cross
+    obtained: 2021-12
+  - name: ProTect Certification
+    issuer: AGLC
+    valid: 2022-02 to 2027-02
+  - name: ProServe Certification
+    issuer: AGLC
+    valid: 2022-05 to 2027-05
+  - name: Security Services Individual Licence (handcuff)
+    issuer: Alberta Security Services
+    valid: 2022-05 to 2024-05
+    note: EXPIRED — do not present as current
+  - name: Threat Pattern Recognition / Use of Force (PPCT)
+    issuer: PPCT Management Systems
+    valid: 2023-03 to 2024-04
+    note: EXPIRED — do not present as current
+
+certifications_lacking:
+  # Common asks you do not currently hold. Phase 2 should flag these as
+  # missing_requirements; Phase 3 must put them in gaps[], never fabricate them.
+  - Alberta Private Investigator licence
+  - Peace Officer designation / Alberta Peace Officer Act training
+  - CompTIA A+
+  - post-secondary degree
+
+scoring:
+  threshold_to_draft: 70
+  cap_when_must_have_missed: 30
