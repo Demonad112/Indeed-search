@@ -24,7 +24,7 @@ from .log import get
 
 log = get("jobpipe.db")
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 _STATUS_LIST = ", ".join(f"'{s}'" for s in STATUSES)
 
@@ -58,6 +58,10 @@ CREATE TABLE IF NOT EXISTS jobs (
     score                 INTEGER,
     score_rationale       TEXT,
     score_flags           TEXT,
+    score_matched         TEXT,
+    score_missing         TEXT,
+    score_model           TEXT,
+    score_raw             TEXT,
     scored_at             TEXT,
 
     draft_resume          TEXT,
@@ -216,11 +220,35 @@ def connect(path: Path, *, readonly: bool = False) -> sqlite3.Connection:
     return conn
 
 
+# Columns added after v1. CREATE TABLE IF NOT EXISTS will not add these to a
+# database that already exists, so they are applied explicitly.
+MIGRATIONS: dict[int, tuple[str, ...]] = {
+    2: (
+        "ALTER TABLE jobs ADD COLUMN score_matched TEXT",
+        "ALTER TABLE jobs ADD COLUMN score_missing TEXT",
+        "ALTER TABLE jobs ADD COLUMN score_model TEXT",
+        "ALTER TABLE jobs ADD COLUMN score_raw TEXT",
+    ),
+}
+
+
 def migrate(conn: sqlite3.Connection) -> None:
     """Apply schema. Idempotent — safe to call on every run."""
     current = conn.execute("PRAGMA user_version").fetchone()[0]
     conn.executescript(SCHEMA)
     conn.executescript(APPROVAL_GATE)
+
+    for version in sorted(MIGRATIONS):
+        if current < version:
+            for statement in MIGRATIONS[version]:
+                try:
+                    conn.execute(statement)
+                except sqlite3.OperationalError as exc:
+                    # A fresh database already has the column from SCHEMA above.
+                    if "duplicate column name" not in str(exc):
+                        raise
+            log.info("applied migration to schema v%d", version)
+
     if current < SCHEMA_VERSION:
         conn.execute(f"PRAGMA user_version={SCHEMA_VERSION}")
         log.info("schema at version %d", SCHEMA_VERSION)

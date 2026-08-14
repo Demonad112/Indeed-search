@@ -37,6 +37,18 @@ def cmd_discover(args: argparse.Namespace) -> int:
     )
 
 
+def cmd_score(args: argparse.Namespace) -> int:
+    from jobpipe import score
+
+    return score.run(
+        limit=args.limit,
+        job_id=args.job_id,
+        rescore=args.rescore,
+        calibrate=args.calibrate,
+        dry_run=args.dry_run,
+    )
+
+
 def cmd_status(args: argparse.Namespace) -> int:
     import json
 
@@ -161,7 +173,18 @@ def main(argv: list[str] | None = None) -> int:
     p_probe.add_argument("--ashby", metavar="SLUG")
     p_probe.set_defaults(func=cmd_probe)
 
-    for name, phase in (("score", "2"), ("draft", "3"), ("serve", "4"), ("submit", "5")):
+    p_score = sub.add_parser("score", help="Phase 2 — score postings against criteria.yaml")
+    p_score.add_argument("--calibrate", action="store_true",
+                         help="score the three reference postings and check them against their anchors")
+    p_score.add_argument("--limit", type=int, help="score at most N postings")
+    p_score.add_argument("--job-id", help="score a single job by id")
+    p_score.add_argument("--rescore", action="store_true",
+                         help="also re-score postings that already have a score")
+    p_score.add_argument("--dry-run", action="store_true",
+                         help="print the exact request without calling the API")
+    p_score.set_defaults(func=cmd_score)
+
+    for name, phase in (("draft", "3"), ("serve", "4"), ("submit", "5")):
         p = sub.add_parser(name, help=f"Phase {phase} — not built yet")
         p.set_defaults(func=lambda a, n=name, ph=phase: _not_built(ph, n))
 

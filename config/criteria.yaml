@@ -116,3 +116,21 @@ certifications_lacking:
 scoring:
   threshold_to_draft: 70
   cap_when_must_have_missed: 30
+
+  # The spec named claude-sonnet-4-6. Changed deliberately: that model does not
+  # support structured outputs, which is what makes the strict-JSON contract a
+  # decode-time guarantee rather than a hope plus a retry. claude-sonnet-5 does
+  # support it and is the current Sonnet.
+  model: claude-sonnet-5
+
+  # low | medium | high | xhigh | max. Scoring is a bounded judgement call, not
+  # a research task — medium is the sweet spot. Raise if calibration drifts.
+  effort: medium
+
+  # adaptive | disabled. Adaptive costs more but calibrates noticeably better on
+  # the borderline postings, which are the ones worth getting right.
+  thinking: adaptive
+
+  # Thinking counts against max_tokens. A tight budget yields a response that is
+  # all reasoning and truncated JSON — leave headroom.
+  max_tokens: 8000

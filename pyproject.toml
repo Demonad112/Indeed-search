@@ -8,11 +8,11 @@ dependencies = [
     "feedparser>=6.0",
     "PyYAML>=6.0",
     "python-dotenv>=1.0",
+    # Phase 2. Needs a version with structured-outputs support (output_config.format).
+    "anthropic>=0.69",
 ]
 
 [project.optional-dependencies]
-# Phase 2 (score.py) — added when we get there.
-score = ["anthropic>=0.40"]
 # Phase 4 (review.py).
 web = ["fastapi>=0.115", "uvicorn[standard]>=0.32", "jinja2>=3.1"]
 # Phase 5 (submit.py).
