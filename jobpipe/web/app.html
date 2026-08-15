@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="referrer" content="no-referrer">
+<title>jobpipe</title>
+<style>
+:root{
+  --bg:#0e1116; --panel:#161b22; --panel-2:#1c2430; --line:#2a3441;
+  --ink:#e6edf3; --dim:#8b98a5; --faint:#6b7683;
+  --accent:#4a9eff; --good:#3fb950; --warn:#d29922; --bad:#f85149;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+}
+:root[data-theme="light"]{
+  --bg:#f6f8fa; --panel:#fff; --panel-2:#f0f3f6; --line:#d4dae0;
+  --ink:#1f2328; --dim:#59636e; --faint:#818b96;
+  --accent:#0969da; --good:#1a7f37; --warn:#9a6700; --bad:#cf222e;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+a{color:var(--accent)}
+button{font:inherit;cursor:pointer;border-radius:6px;border:1px solid var(--line);
+  background:var(--panel-2);color:var(--ink);padding:6px 12px}
+button:hover{border-color:var(--accent)}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+button.danger:hover{border-color:var(--bad);color:var(--bad)}
+
+/* ---- banner: the approval gate, stated where it can't be missed ---- */
+#gate{background:linear-gradient(90deg,#1f6feb22,transparent);border-bottom:1px solid var(--line);
+  padding:8px 16px;font-size:12.5px;color:var(--dim);display:flex;gap:10px;align-items:center}
+#gate b{color:var(--ink)}
+#gate .lock{color:var(--good)}
+
+header{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+.bar{display:flex;gap:14px;align-items:center;padding:10px 16px;flex-wrap:wrap}
+.brand{font-weight:700;letter-spacing:-.3px}
+.brand span{color:var(--dim);font-weight:400;font-size:12px;margin-left:6px}
+.stat{font-size:12px;color:var(--dim)}
+.stat b{color:var(--ink);font-variant-numeric:tabular-nums}
+.spacer{flex:1}
+input[type=search],select{background:var(--panel);border:1px solid var(--line);color:var(--ink);
+  border-radius:6px;padding:6px 10px;font:inherit}
+
+main{max-width:1180px;margin:0 auto;padding:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin-bottom:10px;
+  overflow:hidden}
+.card.sel{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.card.gone{opacity:.4}
+.head{display:grid;grid-template-columns:52px 1fr auto;gap:12px;padding:12px 14px;align-items:start;
+  cursor:pointer}
+.score{font:700 19px/1 var(--mono);text-align:center;padding:8px 0;border-radius:6px;
+  background:var(--panel-2);font-variant-numeric:tabular-nums}
+.s-hi{color:var(--good)} .s-mid{color:var(--warn)} .s-lo{color:var(--faint)}
+.t{font-weight:600;font-size:15px}
+.sub{color:var(--dim);font-size:12.5px;margin-top:2px}
+.why{color:var(--dim);font-size:13px;margin-top:6px;max-width:74ch}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.tag{font:500 11px/1 var(--mono);padding:4px 7px;border-radius:4px;background:var(--panel-2);
+  color:var(--dim);border:1px solid var(--line)}
+.tag.soon{color:var(--warn);border-color:var(--warn)}
+.tag.warn{color:var(--bad);border-color:var(--bad)}
+.tag.ok{color:var(--good);border-color:var(--good)}
+.rt{text-align:right;font-size:12px;color:var(--dim);white-space:nowrap}
+.pay{font:600 13px var(--mono);color:var(--ink)}
+
+.body{display:none;border-top:1px solid var(--line);padding:14px}
+.card.open .body{display:block}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:860px){.cols{grid-template-columns:1fr}}
+.lbl{font:600 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.6px;color:var(--faint);
+  margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+textarea{width:100%;min-height:340px;background:var(--bg);color:var(--ink);border:1px solid var(--line);
+  border-radius:6px;padding:10px;font:12.5px/1.55 var(--mono);resize:vertical}
+textarea:focus{outline:none;border-color:var(--accent)}
+details{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+summary{cursor:pointer;color:var(--dim);font-size:12.5px}
+.desc{white-space:pre-wrap;font:12.5px/1.6 var(--mono);color:var(--dim);max-height:420px;
+  overflow:auto;margin-top:10px;padding:10px;background:var(--bg);border-radius:6px}
+.alert{background:#f8514922;border:1px solid var(--bad);color:var(--ink);border-radius:6px;
+  padding:9px 11px;margin-bottom:12px;font-size:12.5px}
+.alert b{color:var(--bad)}
+.gaps{background:var(--panel-2);border:1px solid var(--line);border-radius:6px;padding:9px 11px;
+  margin-bottom:12px;font-size:12.5px}
+.acts{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;align-items:center}
+.nodraft{color:var(--dim);padding:22px;text-align:center;background:var(--bg);border-radius:6px;
+  border:1px dashed var(--line)}
+.empty{text-align:center;padding:60px 20px;color:var(--dim)}
+.empty code{background:var(--panel);padding:3px 7px;border-radius:4px;font-size:12.5px}
+kbd{font:11px var(--mono);background:var(--panel-2);border:1px solid var(--line);border-bottom-width:2px;
+  border-radius:4px;padding:1px 5px;color:var(--dim)}
+#toast{position:fixed;right:16px;bottom:16px;background:var(--panel);border:1px solid var(--line);
+  border-left:3px solid var(--good);border-radius:8px;padding:11px 15px;opacity:0;
+  transform:translateY(8px);transition:.18s;pointer-events:none;z-index:50;max-width:340px}
+#toast.on{opacity:1;transform:none}
+#toast.err{border-left-color:var(--bad)}
+.help{color:var(--faint);font-size:11.5px;padding:14px 4px;text-align:center}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <span class="lock">&#128274;</span>
+  <span><b>Nothing is submitted automatically.</b>
+  Approving records your decision and hands you the files — you send the application yourself.
+  This dashboard is bound to localhost only.</span>
+</div>
+
+<header>
+  <div class="bar">
+    <div class="brand">jobpipe<span id="whoami"></span></div>
+    <div class="stat">queue <b id="n-queue">0</b></div>
+    <div class="stat">approved <b id="n-appr">0</b></div>
+    <div class="stat">flagged <b id="n-flag">0</b></div>
+    <div class="spacer"></div>
+    <input type="search" id="q" placeholder="Filter title / company…" style="width:210px">
+    <select id="view">
+      <option value="queue">Review queue</option>
+      <option value="approved">Approved</option>
+      <option value="rejected">Rejected</option>
+      <option value="all">Everything scored</option>
+    </select>
+    <button id="theme" title="Toggle light / dark">Theme</button>
+    <button id="logout">Sign out</button>
+  </div>
+</header>
+
+<main>
+  <div id="list"></div>
+  <div class="help">
+    <kbd>j</kbd>/<kbd>k</kbd> move &nbsp; <kbd>o</kbd> open &nbsp; <kbd>a</kbd> approve &nbsp;
+    <kbd>x</kbd> reject &nbsp; <kbd>r</kbd> regenerate &nbsp; <kbd>s</kbd> save edits &nbsp;
+    <kbd>/</kbd> filter
+  </div>
+</main>
+
+<div id="toast"></div>
+
+<script>
+const $ = s => document.querySelector(s);
+let JOBS = [], sel = 0, openId = null;
+
+const esc = s => (s??'').replace(/[&<>"']/g, c =>
+  ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function toast(msg, bad){
+  const t = $('#toast'); t.textContent = msg;
+  t.className = 'on' + (bad ? ' err' : '');
+  clearTimeout(t._t); t._t = setTimeout(()=>t.className='', 2600);
+}
+
+async function api(path, opts){
+  const r = await fetch(path, Object.assign({headers:{'Content-Type':'application/json'}}, opts||{}));
+  if(r.status === 401){ location.href = '/login'; throw new Error('unauthorized'); }
+  const data = await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(data.detail || ('HTTP ' + r.status));
+  return data;
+}
+
+function money(a,b){
+  if(!a) return 'pay unstated';
+  const f = n => '$' + Math.round(n).toLocaleString();
+  return (b && b !== a) ? f(a)+'–'+f(b) : f(a);
+}
+
+function days(iso){
+  if(!iso) return null;
+  return Math.ceil((new Date(iso) - new Date()) / 864e5);
+}
+
+function card(j, i){
+  const d = days(j.closes_at);
+  const warn = (j.draft_warnings||[]).length;
+  const sc = j.score>=70 ? 's-hi' : j.score>=45 ? 's-mid' : 's-lo';
+  const tags = []
+    .concat(d!==null && d<=7 && d>=0 ? [`<span class="tag soon">closes in ${d}d</span>`] : [])
+    .concat(warn ? [`<span class="tag warn">${warn} draft warning${warn>1?'s':''}</span>`] : [])
+    .concat(j.approved_at ? ['<span class="tag ok">approved</span>'] : [])
+    .concat((j.flags||[]).map(f=>`<span class="tag">${esc(f)}</span>`));
+
+  const hasDraft = !!(j.draft_resume || j.draft_cover);
+
+  return `<div class="card ${i===sel?'sel':''} ${openId===j.id?'open':''} ${j.status==='rejected'?'gone':''}" data-id="${j.id}" data-i="${i}">
+    <div class="head" onclick="toggle('${j.id}')">
+      <div class="score ${sc}">${j.score ?? '—'}</div>
+      <div>
+        <div class="t">${esc(j.title)}</div>
+        <div class="sub">${esc(j.company)} &middot; ${esc(j.location||'location not stated')} &middot; ${esc(j.employment_type||'type not stated')}</div>
+        <div class="why">${esc(j.score_rationale||'')}</div>
+        <div class="tags">${tags.join('')}</div>
+      </div>
+      <div class="rt">
+        <div class="pay">${money(j.salary_annual_min, j.salary_annual_max)}</div>
+        ${j.closes_at ? `<div style="margin-top:4px">closes ${j.closes_at.slice(0,10)}</div>` : ''}
+        ${j.source ? `<div style="margin-top:4px">${esc(j.source)}</div>` : ''}
+      </div>
+    </div>
+    <div class="body">${hasDraft ? draftUI(j) : noDraftUI(j)}</div>
+  </div>`;
+}
+
+function noDraftUI(j){
+  return `<div class="nodraft">
+    No draft yet for this posting.<br><br>
+    Run <code>python run.py draft</code> to generate one, or
+    <button onclick="regen('${j.id}')">Generate now</button>
+  </div>${descUI(j)}${actsUI(j,false)}`;
+}
+
+function draftUI(j){
+  const w = j.draft_warnings||[], g = j.draft_gaps||[];
+  return `
+  ${w.length ? `<div class="alert"><b>Fabrication check flagged ${w.length} item${w.length>1?'s':''}.</b>
+    Read these before approving:<ul style="margin:6px 0 0 18px;padding:0">
+    ${w.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>` : ''}
+  ${g.length ? `<div class="gaps"><b>Gaps this posting asks for:</b>
+    ${g.map(x=>esc(x)).join(' &middot; ')}</div>` : ''}
+  <div class="cols">
+    <div>
+      <div class="lbl"><span>Tailored resume</span><span>editable</span></div>
+      <textarea id="res-${j.id}" spellcheck="false">${esc(j.draft_resume||'')}</textarea>
+    </div>
+    <div>
+      <div class="lbl"><span>Cover letter</span><span>editable</span></div>
+      <textarea id="cov-${j.id}" spellcheck="false">${esc(j.draft_cover||'')}</textarea>
+    </div>
+  </div>
+  ${descUI(j)}${actsUI(j,true)}`;
+}
+
+function descUI(j){
+  if(!j.description_raw) return '';
+  return `<details><summary>Full job description</summary>
+    <div class="desc">${esc(j.description_raw)}</div></details>`;
+}
+
+function actsUI(j, hasDraft){
+  const approved = !!j.approved_at;
+  return `<div class="acts">
+    ${hasDraft ? `<button onclick="save('${j.id}')">Save edits <kbd>s</kbd></button>` : ''}
+    <button onclick="regen('${j.id}')">Regenerate <kbd>r</kbd></button>
+    <button class="danger" onclick="reject('${j.id}')">Reject <kbd>x</kbd></button>
+    <div class="spacer" style="flex:1"></div>
+    ${hasDraft ? `<button onclick="dl('${j.id}')">Download files</button>` : ''}
+    <button class="primary" onclick="approve('${j.id}')" ${approved?'disabled':''}>
+      ${approved ? 'Approved &#10003;' : 'Approve &amp; apply'} <kbd>a</kbd></button>
+  </div>
+  ${approved && j.url ? `<div style="margin-top:8px;font-size:12.5px;color:var(--dim)">
+     Approved ${esc((j.approved_at||'').slice(0,16).replace('T',' '))} &middot;
+     <a href="${esc(j.url)}" target="_blank" rel="noopener noreferrer">reopen the application page &#8599;</a></div>` : ''}`;
+}
+
+async function load(){
+  const view = $('#view').value, q = $('#q').value.trim();
+  const data = await api(`/api/jobs?view=${view}&q=${encodeURIComponent(q)}`);
+  JOBS = data.jobs;
+  $('#n-queue').textContent = data.counts.queue;
+  $('#n-appr').textContent  = data.counts.approved;
+  $('#n-flag').textContent  = data.counts.flagged;
+  if(sel >= JOBS.length) sel = Math.max(0, JOBS.length-1);
+  render();
+}
+
+function render(){
+  if(!JOBS.length){
+    $('#list').innerHTML = `<div class="empty">
+      <p>Nothing here yet.</p>
+      <p><code>python run.py discover</code> &rarr; <code>score</code> &rarr; <code>draft</code></p></div>`;
+    return;
+  }
+  $('#list').innerHTML = JOBS.map(card).join('');
+}
+
+window.toggle = id => { openId = (openId === id) ? null : id; render(); };
+
+window.save = async id => {
+  const body = {
+    draft_resume: $('#res-'+id).value,
+    draft_cover:  $('#cov-'+id).value,
+  };
+  await api('/api/jobs/'+id+'/draft', {method:'POST', body:JSON.stringify(body)});
+  const j = JOBS.find(x=>x.id===id);
+  Object.assign(j, body);
+  toast('Edits saved');
+};
+
+window.approve = async id => {
+  const j = JOBS.find(x=>x.id===id);
+  if(j.draft_warnings && j.draft_warnings.length){
+    if(!confirm(`The fabrication check flagged ${j.draft_warnings.length} item(s) on this draft.\n\nApprove anyway?`)) return;
+  }
+  if($('#res-'+id)) await save(id);
+  const r = await api('/api/jobs/'+id+'/approve', {method:'POST'});
+  toast('Approved — opening application page');
+  if(r.download) window.location = r.download;
+  if(r.url) setTimeout(()=>window.open(r.url,'_blank','noopener'), 400);
+  await load();
+};
+
+window.reject = async id => {
+  const why = prompt('Reason for rejecting (kept in the audit log):');
+  if(why === null) return;
+  await api('/api/jobs/'+id+'/reject', {method:'POST', body:JSON.stringify({reason:why})});
+  toast('Rejected'); openId = null; await load();
+};
+
+window.regen = async id => {
+  const fb = prompt('Anything to change? (blank = just regenerate)');
+  if(fb === null) return;
+  toast('Regenerating — this takes a few seconds…');
+  try{
+    await api('/api/jobs/'+id+'/regenerate', {method:'POST', body:JSON.stringify({feedback:fb})});
+    toast('New draft ready'); await load();
+  }catch(e){ toast(e.message, true); }
+};
+
+window.dl = id => { window.location = '/api/jobs/'+id+'/download'; };
+
+/* keyboard */
+document.addEventListener('keydown', e => {
+  if(/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)){
+    if(e.key==='Escape') e.target.blur();
+    if(e.key==='s' && (e.metaKey||e.ctrlKey) && openId){ e.preventDefault(); save(openId); }
+    return;
+  }
+  const j = JOBS[sel];
+  if(e.key==='/'){ e.preventDefault(); $('#q').focus(); return; }
+  if(e.key==='j'||e.key==='ArrowDown'){ sel=Math.min(sel+1,JOBS.length-1); render(); scrollSel(); }
+  if(e.key==='k'||e.key==='ArrowUp'){ sel=Math.max(sel-1,0); render(); scrollSel(); }
+  if(!j) return;
+  if(e.key==='o'||e.key==='Enter') toggle(j.id);
+  if(e.key==='a') approve(j.id);
+  if(e.key==='x') reject(j.id);
+  if(e.key==='r') regen(j.id);
+  if(e.key==='s' && openId===j.id) save(j.id);
+});
+function scrollSel(){
+  const el = document.querySelector('.card.sel');
+  if(el) el.scrollIntoView({block:'nearest'});
+}
+
+$('#view').onchange = () => { openId=null; sel=0; load(); };
+let qt; $('#q').oninput = () => { clearTimeout(qt); qt = setTimeout(load, 180); };
+$('#logout').onclick = async () => { await api('/api/logout',{method:'POST'}); location.href='/login'; };
+$('#theme').onclick = () => {
+  const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = next;
+  localStorage.setItem('jp-theme', next);
+};
+document.documentElement.dataset.theme = localStorage.getItem('jp-theme') || 'dark';
+
+load().catch(e => toast(e.message, true));
+setInterval(() => { if(!openId) load().catch(()=>{}); }, 30000);
+</script>
+</body>
+</html>

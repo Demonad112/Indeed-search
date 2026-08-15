@@ -318,3 +318,176 @@ def contract_example() -> str:
         },
         indent=2,
     )
+
+
+
+# ---------------------------------------------------------------------------
+# Phase 3 — drafting
+# ---------------------------------------------------------------------------
+
+DRAFT_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "properties": {
+        "resume_markdown": {
+            "type": "string",
+            "description": "The full tailored resume in markdown. Reordered and reworded "
+            "from the master only — no new employers, dates, certifications or numbers.",
+        },
+        "cover_letter_markdown": {
+            "type": "string",
+            "description": "The cover letter in markdown, in the candidate's voice.",
+        },
+        "gaps": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Things this posting requires that the candidate does not have. "
+            "Anything that would otherwise tempt you to invent goes here instead.",
+        },
+        "emphasis": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Which parts of the master resume were pulled forward, and why.",
+        },
+        "opening_line": {
+            "type": "string",
+            "description": "The cover letter's first sentence, copied verbatim so it can be "
+            "checked against the banned-openers list.",
+        },
+    },
+    "required": [
+        "resume_markdown",
+        "cover_letter_markdown",
+        "gaps",
+        "emphasis",
+        "opening_line",
+    ],
+    "additionalProperties": False,
+}
+
+BANNED_OPENERS = [
+    "i am writing to express",
+    "i am writing to apply",
+    "i am excited to apply",
+    "i believe i would be",
+    "i am the perfect candidate",
+    "your esteemed organization",
+    "your esteemed organisation",
+    "this exciting opportunity",
+    "i was thrilled to see",
+    "please accept this letter",
+    "i am reaching out regarding",
+]
+
+NL = "\n"
+QUOTE = '"'
+
+
+def draft_system_prompt(resume_master: str, voice_sample: str, criteria: dict[str, Any]) -> str:
+    """Drafting system prompt. Byte-stable across postings, so it caches."""
+    lacking = criteria.get("certifications_lacking", []) or []
+    held = criteria.get("certifications_held", []) or []
+
+    lacking_lines = NL.join(f"  - {item}" for item in lacking)
+    held_lines = NL.join(
+        f"  - {c.get('name')} ({c.get('issuer')}), {c.get('valid') or c.get('obtained')}"
+        + (f" — {c['note']}" if c.get("note") else "")
+        for c in held
+    )
+    banned_lines = NL.join(f"    - {QUOTE}{o}...{QUOTE}" for o in BANNED_OPENERS)
+
+    return f"""You write job application materials for one candidate. You return JSON only.
+
+# The absolute rule
+
+Everything you write must be traceable to the master resume below. You may
+reorder, reword, re-emphasise, combine and cut. You may NOT add.
+
+Never introduce:
+  - an employer, job title or date that is not in the master resume
+  - a certification, licence or degree that is not in the held list
+  - a number, metric, percentage or dollar figure that is not in the master
+  - a technology, tool or system not named in the master
+  - a claim about years of experience not supported by the master's dates
+
+If the posting asks for something the candidate lacks, it goes in `gaps`. Never
+paper over it, never imply it, never write "familiar with" as a substitute for a
+credential. A draft that quietly invents a certification is worse than useless —
+it is a lie he has to defend in an interview.
+
+Commonly requested and NOT held. If the posting asks for any of these, it goes
+straight into `gaps`:
+{lacking_lines}
+
+Certifications actually held. Two are expired — say so plainly or omit them, but
+never imply they are current:
+{held_lines}
+
+# Master resume — the only source of truth
+
+{resume_master}
+
+# Voice
+
+{voice_sample}
+
+# The resume you produce
+
+- Same factual content as the master. Reordered so the most relevant experience
+  leads, and reworded so bullets speak this posting's language.
+- Every employer and every date exactly as the master has them.
+- Cut irrelevant bullets rather than padding. Two pages' worth is the ceiling.
+- Markdown, following the master's heading structure.
+- Where the posting has a specific term for something he has actually done, use
+  the posting's term. That is tailoring, not invention.
+
+# The cover letter you produce
+
+- 250-350 words. Markdown. No letterhead, no address block, no date line.
+- Open with something concrete about THIS posting or THIS employer. Never with a
+  statement of interest. These openers are banned outright:
+{banned_lines}
+- Name specific, verifiable things: detentions and arrests, disclosure to police
+  and courts, internal investigations, the 30-person Stampede team, six years of
+  Active Directory and network work. Concrete beats adjectives every time.
+- The two tracks — loss prevention and IT/network — are his real differentiator
+  for investigative work. State the combination plainly and move on. Do not
+  oversell the career change or apologise for it.
+- If there is a real gap, one honest sentence about it beats silence. Frame it as
+  what he brings instead, not as an excuse.
+- Fix the master's typos and tighten its sentences; keep its directness.
+- Close by offering references or further detail. Not "I look forward to hearing
+  from you at your earliest convenience."
+
+# Output
+
+Return the JSON object. `opening_line` must be the cover letter's actual first
+sentence, copied verbatim."""
+
+
+def draft_user_prompt(job: dict[str, Any], feedback: str | None = None) -> str:
+    description = (job.get("description_raw") or "").strip() or "(no description available)"
+    if len(description) > 18000:
+        description = description[:18000] + f"{NL}{NL}[...truncated...]"
+
+    matched = json.loads(job.get("score_matched") or "[]")
+    missing = json.loads(job.get("score_missing") or "[]")
+
+    extra = ""
+    if feedback:
+        extra = (
+            f"{NL}{NL}REVISION REQUESTED. The previous draft was rejected with this "
+            f"feedback — address it directly:{NL}{feedback}{NL}"
+        )
+
+    return f"""TITLE: {job.get('title')}
+COMPANY: {job.get('company')}
+LOCATION: {job.get('location') or 'not stated'}
+SCORE: {job.get('score')}/100 — {job.get('score_rationale') or ''}
+
+SIGNALS THIS POSTING MATCHED: {', '.join(matched) or 'none recorded'}
+REQUIREMENTS HE LACKS: {', '.join(missing) or 'none recorded'}
+
+FULL POSTING:
+{description}
+{extra}
+Write the tailored resume and cover letter. Return only the JSON object."""
