@@ -134,3 +134,9 @@ scoring:
   # Thinking counts against max_tokens. A tight budget yields a response that is
   # all reasoning and truncated JSON — leave headroom.
   max_tokens: 8000
+
+drafting:
+  # Drafting is writing, not classification — worth more effort than scoring.
+  model: claude-sonnet-5
+  effort: high
+  max_tokens: 16000
