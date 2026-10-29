@@ -49,6 +49,25 @@ def cmd_score(args: argparse.Namespace) -> int:
     )
 
 
+def cmd_draft(args: argparse.Namespace) -> int:
+    from jobpipe import draft
+
+    return draft.run(
+        threshold=args.threshold,
+        limit=args.limit,
+        job_id=args.job_id,
+        regenerate=args.regenerate,
+        feedback=args.feedback,
+        dry_run=args.dry_run,
+    )
+
+
+def cmd_serve(args: argparse.Namespace) -> int:
+    from jobpipe import review
+
+    return review.run(host=args.host, port=args.port)
+
+
 def cmd_status(args: argparse.Namespace) -> int:
     import json
 
@@ -184,7 +203,22 @@ def main(argv: list[str] | None = None) -> int:
                          help="print the exact request without calling the API")
     p_score.set_defaults(func=cmd_score)
 
-    for name, phase in (("draft", "3"), ("serve", "4"), ("submit", "5")):
+    p_draft = sub.add_parser("draft", help="Phase 3 — write tailored resumes and cover letters")
+    p_draft.add_argument("--threshold", type=int, help="score floor (default: criteria.yaml)")
+    p_draft.add_argument("--limit", type=int, help="draft at most N postings")
+    p_draft.add_argument("--job-id", help="draft a single job by id")
+    p_draft.add_argument("--regenerate", action="store_true", help="redo drafts that already exist")
+    p_draft.add_argument("--feedback", help="what to change when regenerating")
+    p_draft.add_argument("--dry-run", action="store_true", help="list what would be drafted")
+    p_draft.set_defaults(func=cmd_draft)
+
+    p_serve = sub.add_parser("serve", help="Phase 4 — open the private review dashboard")
+    p_serve.add_argument("--host", default="127.0.0.1",
+                         help="bind address (default 127.0.0.1 — anything else is exposed)")
+    p_serve.add_argument("--port", type=int, default=8000)
+    p_serve.set_defaults(func=cmd_serve)
+
+    for name, phase in (("submit", "5"),):
         p = sub.add_parser(name, help=f"Phase {phase} — not built yet")
         p.set_defaults(func=lambda a, n=name, ph=phase: _not_built(ph, n))
 

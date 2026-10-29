@@ -24,7 +24,7 @@ from .log import get
 
 log = get("jobpipe.db")
 
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 
 _STATUS_LIST = ", ".join(f"'{s}'" for s in STATUSES)
 
@@ -66,6 +66,10 @@ CREATE TABLE IF NOT EXISTS jobs (
 
     draft_resume          TEXT,
     draft_cover           TEXT,
+    draft_gaps            TEXT,
+    draft_warnings        TEXT,
+    draft_model           TEXT,
+    draft_edited_at       TEXT,
     drafted_at            TEXT,
 
     approved_at           TEXT,
@@ -228,6 +232,12 @@ MIGRATIONS: dict[int, tuple[str, ...]] = {
         "ALTER TABLE jobs ADD COLUMN score_missing TEXT",
         "ALTER TABLE jobs ADD COLUMN score_model TEXT",
         "ALTER TABLE jobs ADD COLUMN score_raw TEXT",
+    ),
+    3: (
+        "ALTER TABLE jobs ADD COLUMN draft_gaps TEXT",
+        "ALTER TABLE jobs ADD COLUMN draft_warnings TEXT",
+        "ALTER TABLE jobs ADD COLUMN draft_model TEXT",
+        "ALTER TABLE jobs ADD COLUMN draft_edited_at TEXT",
     ),
 }
 

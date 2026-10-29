@@ -1,12 +1,14 @@
 PY := .venv/bin/python
 
-.PHONY: help setup daily discover status test clean replay
+.PHONY: help setup daily discover score draft dashboard calibrate status test clean replay
 
 help:
 	@echo "make setup     — create the venv and install dependencies"
 	@echo "make daily     — discover, score, then show what is waiting"
 	@echo "make discover  — Phase 1 only"
 	@echo "make score     — Phase 2 only"
+	@echo "make draft     — Phase 3 only"
+	@echo "make dashboard — Phase 4: the private review dashboard"
 	@echo "make calibrate — check scoring against the three reference postings"
 	@echo "make status    — what is currently in the database"
 	@echo "make test     — run the test suite"
@@ -15,20 +17,24 @@ help:
 
 setup:
 	uv venv
-	uv pip install httpx feedparser PyYAML python-dotenv anthropic pytest
-	@test -f .env || (cp .env.example .env && echo "created .env — set JOBPIPE_CONTACT_EMAIL and ANTHROPIC_API_KEY")
+	uv pip install httpx feedparser PyYAML python-dotenv anthropic fastapi 'uvicorn[standard]' pytest
+	@test -f .env || (cp .env.example .env && echo "created .env — set JOBPIPE_CONTACT_EMAIL, ANTHROPIC_API_KEY, JOBPIPE_PASSPHRASE")
 
-# Phase 3 joins this line as it is built:  && $(PY) run.py draft
-daily: discover score status
+daily: discover score draft status
 	@echo
-	@echo "Phases 3-5 are not built yet, so nothing is drafted or queued."
-	@echo "Scored postings above the threshold are waiting for draft.py."
+	@echo "Review them:   make dashboard"
 
 discover:
 	$(PY) run.py discover
 
 score:
 	$(PY) run.py score
+
+draft:
+	$(PY) run.py draft
+
+dashboard:
+	$(PY) run.py serve
 
 calibrate:
 	$(PY) run.py score --calibrate

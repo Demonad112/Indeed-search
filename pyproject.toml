@@ -10,11 +10,12 @@ dependencies = [
     "python-dotenv>=1.0",
     # Phase 2. Needs a version with structured-outputs support (output_config.format).
     "anthropic>=0.69",
+    # Phase 4. No jinja2 — the dashboard is a static page plus a JSON API.
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
 ]
 
 [project.optional-dependencies]
-# Phase 4 (review.py).
-web = ["fastapi>=0.115", "uvicorn[standard]>=0.32", "jinja2>=3.1"]
 # Phase 5 (submit.py).
 submit = ["playwright>=1.48"]
 dev = ["pytest>=8.0"]
@@ -25,6 +26,7 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["jobpipe"]
+artifacts = ["jobpipe/web/*.html"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

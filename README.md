@@ -6,15 +6,52 @@ loss-prevention / security-analyst roles in Calgary, Alberta.
 Finds postings, scores them against a profile, drafts tailored materials, queues
 them for one-click approval, and only then submits.
 
-**Status: Phases 1–2 are built. Phases 3–5 are not.**
+**Status: Phases 1–4 are built. Phase 5 is deliberately not.**
 
 | Phase | Module | State |
 |---|---|---|
 | 1 — discover | `jobpipe/discover.py` | ✅ built |
 | 2 — score | `jobpipe/score.py` | ✅ built |
-| 3 — draft | `jobpipe/draft.py` | not started |
-| 4 — review | `jobpipe/review.py` | not started |
-| 5 — submit | `jobpipe/submit.py` | not started |
+| 3 — draft | `jobpipe/draft.py` | ✅ built |
+| 4 — review | `jobpipe/review.py` | ✅ built |
+| 5 — submit | `jobpipe/submit.py` | not built — see below |
+
+## The daily loop
+
+```bash
+make daily        # discover → score → draft
+make dashboard    # open http://127.0.0.1:8000 and triage
+```
+
+The dashboard is where you live. Postings arrive ranked, with a tailored resume
+and cover letter already written, deadlines pinned to the top. You read, edit if
+you want, and click **Approve & apply** — which records your approval, downloads
+a zip of your resume, cover letter and an interview brief, and opens the
+employer's application page in a new tab.
+
+### Privacy
+
+Your resume never leaves the machine.
+
+- **Binds to `127.0.0.1`.** Not reachable from your network, let alone the
+  internet. Passing `--host` anything else prints a warning first.
+- **Passphrase on every page.** Set `JOBPIPE_PASSPHRASE` in `.env`; the server
+  refuses to start without one. Session cookie is HttpOnly, SameSite=strict, and
+  HMAC-signed — changing the passphrase invalidates every existing session.
+- **Zero external requests.** No CDN, no fonts, no analytics, no HTMX from a
+  CDN — the page is vanilla JS and a Content-Security-Policy of `default-src
+  'self'` blocks anything else. Nothing can phone home with your resume in it.
+- `noindex` on every response, `no-store` on anything carrying resume text, and
+  a per-IP attempt limiter on the login.
+
+### Why there is no auto-submit
+
+Phase 5 would drive Playwright against employer ATS forms. I'd advise against it
+and haven't built it: Workday and BambooHR forms break constantly, each employer
+needs its own adapter, and the spec's own "pause and prompt me on any unexpected
+field" rule means it saves little over pasting the files yourself. The database
+triggers that gate `submitted` are still in place, so if you ever want it, the
+safety rail is already there.
 
 ---
 
@@ -42,22 +79,26 @@ all of this by hitting the database directly, bypassing every line of Python.
 Requires Python 3.11+ and [uv](https://docs.astral.sh/uv/).
 
 ```bash
-uv venv
-uv pip install httpx feedparser PyYAML python-dotenv pytest
-
+make setup
 cp .env.example .env
-$EDITOR .env            # JOBPIPE_CONTACT_EMAIL is required — discovery refuses to run without it
+$EDITOR .env
 ```
 
-That email goes into the `User-Agent` on every outbound request so employers and
-ATS operators can identify and contact you.
+Three values matter:
+
+| Variable | Needed by | Why |
+|---|---|---|
+| `JOBPIPE_CONTACT_EMAIL` | discover | Goes in the `User-Agent` so employers can identify and contact you. Discovery refuses to run without it. |
+| `ANTHROPIC_API_KEY` | score, draft | Scoring and drafting call the API. |
+| `JOBPIPE_PASSPHRASE` | serve | The dashboard will not start without one. |
 
 ---
 
 ## Daily use
 
 ```bash
-make daily              # discover, then show what is waiting
+make daily        # discover → score → draft
+make dashboard    # triage what came back
 ```
 
 or directly:
@@ -74,9 +115,19 @@ python run.py score --dry-run       # print the exact request without calling th
 python run.py score --limit 5       # score the 5 nearest-deadline postings
 python run.py score --rescore       # re-score things that already have a score
 
+python run.py draft                 # write resumes + cover letters above the threshold
+python run.py draft --dry-run       # list what would be drafted
+python run.py draft --job-id X --regenerate --feedback "less formal"
+
+python run.py serve                 # the dashboard, localhost only
+python run.py serve --port 9000
+
 python run.py status                # what is in the database
 python run.py probe --greenhouse <slug>   # test a board before adding it
 ```
+
+Keyboard in the dashboard: `j`/`k` move, `o` open, `a` approve, `x` reject,
+`r` regenerate, `s` save edits, `/` filter.
 
 Exit codes, for cron and GitHub Actions:
 
@@ -221,6 +272,28 @@ posting itself sits in the user turn, after the breakpoint. A test asserts the
 system prompt stays byte-stable, because a stray timestamp in it would silently
 cost full price on every call.
 
+## Drafting (Phase 3)
+
+Reorders and rewords the master resume for each posting, and writes a cover
+letter in your voice. Both stored as markdown, both editable in the dashboard.
+
+**"Never invent experience, certifications, or dates" is checked, not trusted.**
+Asking the model to confirm it didn't fabricate is worthless — a model that
+fabricates will also fabricate the attestation. So `check_fabrication()` does it
+deterministically:
+
+- every credential in `certifications_lacking` is scanned for, and any mention
+  that isn't clearly negated is flagged (so *"I do not hold CompTIA A+"* passes,
+  *"I hold CompTIA A+"* does not)
+- expired certifications presented as current are flagged
+- four-digit years that don't appear in the master resume are flagged
+- banned cover-letter openers are flagged
+
+A flagged draft is stored with `draft_warnings` and shows up red in the
+dashboard, with a confirmation prompt before you can approve it. It's a smoke
+alarm, not a proof — it catches the fabrications that would embarrass you in an
+interview, not every conceivable one.
+
 ## Data model
 
 One `jobs` table, plus `events` (full audit trail of every state transition),
@@ -261,7 +334,7 @@ work.
 python -m pytest
 ```
 
-167 tests, no network. The two the spec calls out as costliest to get wrong:
+238 tests, no network. The ones the spec calls out as costliest to get wrong:
 
 - **`tests/test_approval_gate.py`** — hits the database directly with raw SQL,
   bypassing every line of Python, to prove the gate is structural.
@@ -269,6 +342,14 @@ python -m pytest
   checked (JSON Schema cannot express numeric bounds, so it must be checked in
   code), both caps, the retry path, and the request shape including the cache
   breakpoint. The Anthropic client is stubbed.
+
+- **`tests/test_draft.py`** — the anti-fabrication check, hammered with drafts
+  that lie in the specific ways that would hurt: claiming a credential, dressing
+  up an expired one, inventing a year. Includes the inverse — honest disclaimers
+  must *not* trip it, or the check would punish exactly the behaviour we want.
+- **`tests/test_review.py`** — the auth wall (every resume-bearing route 401s
+  while signed out), cookie flags, forged and expired tokens, and that approving
+  sets both gate fields while leaving `submitted_at` NULL.
 
 Plus `tests/test_salary.py` and `tests/test_discover.py`, built from strings
 taken verbatim from real Calgary postings — including the $1/yr one.
