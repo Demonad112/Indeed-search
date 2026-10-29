@@ -21,3 +21,4 @@ uv.lock
 logs/
 *.log
 .DS_Store
+.claude/settings.local.json
