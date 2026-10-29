@@ -23,18 +23,11 @@
         "source": "git",
         "url": "https://github.com/anthropics/claude-plugins-official.git"
       }
-    },
-    "claude-community": {
-      "source": {
-        "source": "git",
-        "url": "https://github.com/anthropics/claude-plugins-community.git"
-      }
     }
   },
   "enabledPlugins": {
     "code-review@claude-plugins-official": true,
-    "commit-commands@claude-plugins-official": true,
-    "gate-and-ship@claude-community": true
+    "commit-commands@claude-plugins-official": true
   },
   "hooks": {
     "SessionStart": [
